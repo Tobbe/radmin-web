@@ -1,1103 +1,693 @@
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>RedwoodJS Admin</title>
-    <style>
-      /* cspell:disable-file */
-      /* webkit printing magic: print all background colors */
-      html {
-        -webkit-print-color-adjust: exact;
-      }
-      * {
-        box-sizing: border-box;
-        -webkit-print-color-adjust: exact;
-      }
-
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-      }
-      @media only screen {
-        body {
-          margin: 2em auto;
-          max-width: 900px;
-          color: rgb(55, 53, 47);
-        }
-      }
-
-      body {
-        line-height: 1.5;
-        white-space: pre-wrap;
-      }
-
-      a,
-      a.visited {
-        color: inherit;
-        text-decoration: underline;
-      }
-
-      .pdf-relative-link-path {
-        font-size: 80%;
-        color: #444;
-      }
-
-      h1,
-      h2,
-      h3 {
-        letter-spacing: -0.01em;
-        line-height: 1.2;
-        font-weight: 600;
-        margin-bottom: 0;
-      }
-
-      .page-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-top: 0;
-        margin-bottom: 0.75em;
-      }
-
-      h1 {
-        font-size: 1.875rem;
-        margin-top: 1.875rem;
-      }
-
-      h2 {
-        font-size: 1.5rem;
-        margin-top: 1.5rem;
-      }
-
-      h3 {
-        font-size: 1.25rem;
-        margin-top: 1.25rem;
-      }
-
-      .source {
-        border: 1px solid #ddd;
-        border-radius: 3px;
-        padding: 1.5em;
-        word-break: break-all;
-      }
-
-      .callout {
-        border-radius: 3px;
-        padding: 1rem;
-      }
-
-      figure {
-        margin: 1.25em 0;
-        page-break-inside: avoid;
-      }
-
-      figcaption {
-        opacity: 0.5;
-        font-size: 85%;
-        margin-top: 0.5em;
-      }
-
-      mark {
-        background-color: transparent;
-      }
-
-      .indented {
-        padding-left: 1.5em;
-      }
-
-      hr {
-        background: transparent;
-        display: block;
-        width: 100%;
-        height: 1px;
-        visibility: visible;
-        border: none;
-        border-bottom: 1px solid rgba(55, 53, 47, 0.09);
-      }
-
-      img {
-        max-width: 100%;
-      }
-
-      @media only print {
-        img {
-          max-height: 100vh;
-          object-fit: contain;
-        }
-      }
-
-      @page {
-        margin: 1in;
-      }
-
-      .collection-content {
-        font-size: 0.875rem;
-      }
-
-      .column-list {
-        display: flex;
-        justify-content: space-between;
-      }
-
-      .column {
-        padding: 0 1em;
-      }
-
-      .column:first-child {
-        padding-left: 0;
-      }
-
-      .column:last-child {
-        padding-right: 0;
-      }
-
-      .table_of_contents-item {
-        display: block;
-        font-size: 0.875rem;
-        line-height: 1.3;
-        padding: 0.125rem;
-      }
-
-      .table_of_contents-indent-1 {
-        margin-left: 1.5rem;
-      }
-
-      .table_of_contents-indent-2 {
-        margin-left: 3rem;
-      }
-
-      .table_of_contents-indent-3 {
-        margin-left: 4.5rem;
-      }
-
-      .table_of_contents-link {
-        text-decoration: none;
-        opacity: 0.7;
-        border-bottom: 1px solid rgba(55, 53, 47, 0.18);
-      }
-
-      table,
-      th,
-      td {
-        border: 1px solid rgba(55, 53, 47, 0.09);
-        border-collapse: collapse;
-      }
-
-      table {
-        border-left: none;
-        border-right: none;
-      }
-
-      th,
-      td {
-        font-weight: normal;
-        padding: 0.25em 0.5em;
-        line-height: 1.5;
-        min-height: 1.5em;
-        text-align: left;
-      }
-
-      th {
-        color: rgba(55, 53, 47, 0.6);
-      }
-
-      ol,
-      ul {
-        margin: 0;
-        margin-block-start: 0.6em;
-        margin-block-end: 0.6em;
-      }
-
-      li > ol:first-child,
-      li > ul:first-child {
-        margin-block-start: 0.6em;
-      }
-
-      ul > li {
-        list-style: disc;
-      }
-
-      ul.to-do-list {
-        padding-inline-start: 0;
-      }
-
-      ul.to-do-list > li {
-        list-style: none;
-      }
-
-      .to-do-children-checked {
-        text-decoration: line-through;
-        opacity: 0.375;
-      }
-
-      ul.toggle > li {
-        list-style: none;
-      }
-
-      ul {
-        padding-inline-start: 1.7em;
-      }
-
-      ul > li {
-        padding-left: 0.1em;
-      }
-
-      ol {
-        padding-inline-start: 1.6em;
-      }
-
-      ol > li {
-        padding-left: 0.2em;
-      }
-
-      .mono ol {
-        padding-inline-start: 2em;
-      }
-
-      .mono ol > li {
-        text-indent: -0.4em;
-      }
-
-      .toggle {
-        padding-inline-start: 0em;
-        list-style-type: none;
-      }
-
-      /* Indent toggle children */
-      .toggle > li > details {
-        padding-left: 1.7em;
-      }
-
-      .toggle > li > details > summary {
-        margin-left: -1.1em;
-      }
-
-      .selected-value {
-        display: inline-block;
-        padding: 0 0.5em;
-        background: rgba(206, 205, 202, 0.5);
-        border-radius: 3px;
-        margin-right: 0.5em;
-        margin-top: 0.3em;
-        margin-bottom: 0.3em;
-        white-space: nowrap;
-      }
-
-      .collection-title {
-        display: inline-block;
-        margin-right: 1em;
-      }
-
-      .page-description {
-        margin-bottom: 2em;
-      }
-
-      .simple-table {
-        margin-top: 1em;
-        font-size: 0.875rem;
-        empty-cells: show;
-      }
-      .simple-table td {
-        height: 29px;
-        min-width: 120px;
-      }
-
-      .simple-table th {
-        height: 29px;
-        min-width: 120px;
-      }
-
-      .simple-table-header-color {
-        background: rgb(247, 246, 243);
-        color: black;
-      }
-      .simple-table-header {
-        font-weight: 500;
-      }
-
-      time {
-        opacity: 0.5;
-      }
-
-      .icon {
-        display: inline-block;
-        max-width: 1.2em;
-        max-height: 1.2em;
-        text-decoration: none;
-        vertical-align: text-bottom;
-        margin-right: 0.5em;
-      }
-
-      img.icon {
-        border-radius: 3px;
-      }
-
-      .user-icon {
-        width: 1.5em;
-        height: 1.5em;
-        border-radius: 100%;
-        margin-right: 0.5rem;
-      }
-
-      .user-icon-inner {
-        font-size: 0.8em;
-      }
-
-      .text-icon {
-        border: 1px solid #000;
-        text-align: center;
-      }
-
-      .page-cover-image {
-        display: block;
-        object-fit: cover;
-        width: 100%;
-        max-height: 30vh;
-      }
-
-      .page-header-icon {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-      }
-
-      .page-header-icon-with-cover {
-        margin-top: -0.72em;
-        margin-left: 0.07em;
-      }
-
-      .page-header-icon img {
-        border-radius: 3px;
-      }
-
-      .link-to-page {
-        margin: 1em 0;
-        padding: 0;
-        border: none;
-        font-weight: 500;
-      }
-
-      p > .user {
-        opacity: 0.5;
-      }
-
-      td > .user,
-      td > time {
-        white-space: nowrap;
-      }
-
-      input[type="checkbox"] {
-        transform: scale(1.5);
-        margin-right: 0.6em;
-        vertical-align: middle;
-      }
-
-      p {
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-      }
-
-      .image {
-        border: none;
-        margin: 1.5em 0;
-        padding: 0;
-        border-radius: 0;
-        text-align: center;
-      }
-
-      .code,
-      code {
-        background: rgba(135, 131, 120, 0.15);
-        border-radius: 3px;
-        padding: 0.2em 0.4em;
-        border-radius: 3px;
-        font-size: 85%;
-        tab-size: 2;
-      }
-
-      code {
-        color: #eb5757;
-      }
-
-      .code {
-        padding: 1.5em 1em;
-      }
-
-      .code-wrap {
-        white-space: pre-wrap;
-        word-break: break-all;
-      }
-
-      .code > code {
-        background: none;
-        padding: 0;
-        font-size: 100%;
-        color: inherit;
-      }
-
-      blockquote {
-        font-size: 1.25em;
-        margin: 1em 0;
-        padding-left: 1em;
-        border-left: 3px solid rgb(55, 53, 47);
-      }
-
-      .bookmark {
-        text-decoration: none;
-        max-height: 8em;
-        padding: 0;
-        display: flex;
-        width: 100%;
-        align-items: stretch;
-      }
-
-      .bookmark-title {
-        font-size: 0.85em;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        height: 1.75em;
-        white-space: nowrap;
-      }
-
-      .bookmark-text {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .bookmark-info {
-        flex: 4 1 180px;
-        padding: 12px 14px 14px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-      }
-
-      .bookmark-image {
-        width: 33%;
-        flex: 1 1 180px;
-        display: block;
-        position: relative;
-        object-fit: cover;
-        border-radius: 1px;
-      }
-
-      .bookmark-description {
-        color: rgba(55, 53, 47, 0.6);
-        font-size: 0.75em;
-        overflow: hidden;
-        max-height: 4.5em;
-        word-break: break-word;
-      }
-
-      .bookmark-href {
-        font-size: 0.75em;
-        margin-top: 0.25em;
-      }
-
-      .sans {
-        font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif,
-          "Segoe UI Emoji", "Segoe UI Symbol";
-      }
-      .code {
-        font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono",
-          "Liberation Mono", Courier, monospace;
-      }
-      .serif {
-        font-family: Lyon-Text, Georgia, ui-serif, serif;
-      }
-      .mono {
-        font-family: iawriter-mono, Nitti, Menlo, Courier, monospace;
-      }
-      .pdf .sans {
-        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif,
-          "Segoe UI Emoji", "Segoe UI Symbol", "Twemoji", "Noto Color Emoji",
-          "Noto Sans CJK JP";
-      }
-      .pdf:lang(zh-CN) .sans {
-        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif,
-          "Segoe UI Emoji", "Segoe UI Symbol", "Twemoji", "Noto Color Emoji",
-          "Noto Sans CJK SC";
-      }
-      .pdf:lang(zh-TW) .sans {
-        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif,
-          "Segoe UI Emoji", "Segoe UI Symbol", "Twemoji", "Noto Color Emoji",
-          "Noto Sans CJK TC";
-      }
-      .pdf:lang(ko-KR) .sans {
-        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif,
-          "Segoe UI Emoji", "Segoe UI Symbol", "Twemoji", "Noto Color Emoji",
-          "Noto Sans CJK KR";
-      }
-      .pdf .code {
-        font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas,
-          "PT Mono", "Liberation Mono", Courier, monospace, "Twemoji",
-          "Noto Color Emoji", "Noto Sans Mono CJK JP";
-      }
-      .pdf:lang(zh-CN) .code {
-        font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas,
-          "PT Mono", "Liberation Mono", Courier, monospace, "Twemoji",
-          "Noto Color Emoji", "Noto Sans Mono CJK SC";
-      }
-      .pdf:lang(zh-TW) .code {
-        font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas,
-          "PT Mono", "Liberation Mono", Courier, monospace, "Twemoji",
-          "Noto Color Emoji", "Noto Sans Mono CJK TC";
-      }
-      .pdf:lang(ko-KR) .code {
-        font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas,
-          "PT Mono", "Liberation Mono", Courier, monospace, "Twemoji",
-          "Noto Color Emoji", "Noto Sans Mono CJK KR";
-      }
-      .pdf .serif {
-        font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, "Twemoji",
-          "Noto Color Emoji", "Noto Serif CJK JP";
-      }
-      .pdf:lang(zh-CN) .serif {
-        font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, "Twemoji",
-          "Noto Color Emoji", "Noto Serif CJK SC";
-      }
-      .pdf:lang(zh-TW) .serif {
-        font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, "Twemoji",
-          "Noto Color Emoji", "Noto Serif CJK TC";
-      }
-      .pdf:lang(ko-KR) .serif {
-        font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, "Twemoji",
-          "Noto Color Emoji", "Noto Serif CJK KR";
-      }
-      .pdf .mono {
-        font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace,
-          "Twemoji", "Noto Color Emoji", "Noto Sans Mono CJK JP";
-      }
-      .pdf:lang(zh-CN) .mono {
-        font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace,
-          "Twemoji", "Noto Color Emoji", "Noto Sans Mono CJK SC";
-      }
-      .pdf:lang(zh-TW) .mono {
-        font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace,
-          "Twemoji", "Noto Color Emoji", "Noto Sans Mono CJK TC";
-      }
-      .pdf:lang(ko-KR) .mono {
-        font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace,
-          "Twemoji", "Noto Color Emoji", "Noto Sans Mono CJK KR";
-      }
-      .highlight-default {
-        color: rgba(55, 53, 47, 1);
-      }
-      .highlight-gray {
-        color: rgba(120, 119, 116, 1);
-        fill: rgba(120, 119, 116, 1);
-      }
-      .highlight-brown {
-        color: rgba(159, 107, 83, 1);
-        fill: rgba(159, 107, 83, 1);
-      }
-      .highlight-orange {
-        color: rgba(217, 115, 13, 1);
-        fill: rgba(217, 115, 13, 1);
-      }
-      .highlight-yellow {
-        color: rgba(203, 145, 47, 1);
-        fill: rgba(203, 145, 47, 1);
-      }
-      .highlight-teal {
-        color: rgba(68, 131, 97, 1);
-        fill: rgba(68, 131, 97, 1);
-      }
-      .highlight-blue {
-        color: rgba(51, 126, 169, 1);
-        fill: rgba(51, 126, 169, 1);
-      }
-      .highlight-purple {
-        color: rgba(144, 101, 176, 1);
-        fill: rgba(144, 101, 176, 1);
-      }
-      .highlight-pink {
-        color: rgba(193, 76, 138, 1);
-        fill: rgba(193, 76, 138, 1);
-      }
-      .highlight-red {
-        color: rgba(212, 76, 71, 1);
-        fill: rgba(212, 76, 71, 1);
-      }
-      .highlight-gray_background {
-        background: rgba(241, 241, 239, 1);
-      }
-      .highlight-brown_background {
-        background: rgba(244, 238, 238, 1);
-      }
-      .highlight-orange_background {
-        background: rgba(251, 236, 221, 1);
-      }
-      .highlight-yellow_background {
-        background: rgba(251, 243, 219, 1);
-      }
-      .highlight-teal_background {
-        background: rgba(237, 243, 236, 1);
-      }
-      .highlight-blue_background {
-        background: rgba(231, 243, 248, 1);
-      }
-      .highlight-purple_background {
-        background: rgba(244, 240, 247, 0.8);
-      }
-      .highlight-pink_background {
-        background: rgba(249, 238, 243, 0.8);
-      }
-      .highlight-red_background {
-        background: rgba(253, 235, 236, 1);
-      }
-      .block-color-default {
-        color: inherit;
-        fill: inherit;
-      }
-      .block-color-gray {
-        color: rgba(120, 119, 116, 1);
-        fill: rgba(120, 119, 116, 1);
-      }
-      .block-color-brown {
-        color: rgba(159, 107, 83, 1);
-        fill: rgba(159, 107, 83, 1);
-      }
-      .block-color-orange {
-        color: rgba(217, 115, 13, 1);
-        fill: rgba(217, 115, 13, 1);
-      }
-      .block-color-yellow {
-        color: rgba(203, 145, 47, 1);
-        fill: rgba(203, 145, 47, 1);
-      }
-      .block-color-teal {
-        color: rgba(68, 131, 97, 1);
-        fill: rgba(68, 131, 97, 1);
-      }
-      .block-color-blue {
-        color: rgba(51, 126, 169, 1);
-        fill: rgba(51, 126, 169, 1);
-      }
-      .block-color-purple {
-        color: rgba(144, 101, 176, 1);
-        fill: rgba(144, 101, 176, 1);
-      }
-      .block-color-pink {
-        color: rgba(193, 76, 138, 1);
-        fill: rgba(193, 76, 138, 1);
-      }
-      .block-color-red {
-        color: rgba(212, 76, 71, 1);
-        fill: rgba(212, 76, 71, 1);
-      }
-      .block-color-gray_background {
-        background: rgba(241, 241, 239, 1);
-      }
-      .block-color-brown_background {
-        background: rgba(244, 238, 238, 1);
-      }
-      .block-color-orange_background {
-        background: rgba(251, 236, 221, 1);
-      }
-      .block-color-yellow_background {
-        background: rgba(251, 243, 219, 1);
-      }
-      .block-color-teal_background {
-        background: rgba(237, 243, 236, 1);
-      }
-      .block-color-blue_background {
-        background: rgba(231, 243, 248, 1);
-      }
-      .block-color-purple_background {
-        background: rgba(244, 240, 247, 0.8);
-      }
-      .block-color-pink_background {
-        background: rgba(249, 238, 243, 0.8);
-      }
-      .block-color-red_background {
-        background: rgba(253, 235, 236, 1);
-      }
-      .select-value-color-interactiveBlue {
-        background-color: rgba(35, 131, 226, 0.07);
-      }
-      .select-value-color-pink {
-        background-color: rgba(245, 224, 233, 1);
-      }
-      .select-value-color-purple {
-        background-color: rgba(232, 222, 238, 1);
-      }
-      .select-value-color-green {
-        background-color: rgba(219, 237, 219, 1);
-      }
-      .select-value-color-gray {
-        background-color: rgba(227, 226, 224, 1);
-      }
-      .select-value-color-translucentGray {
-        background-color: rgba(255, 255, 255, 0.0375);
-      }
-      .select-value-color-orange {
-        background-color: rgba(250, 222, 201, 1);
-      }
-      .select-value-color-brown {
-        background-color: rgba(238, 224, 218, 1);
-      }
-      .select-value-color-red {
-        background-color: rgba(255, 226, 221, 1);
-      }
-      .select-value-color-yellow {
-        background-color: rgba(253, 236, 200, 1);
-      }
-      .select-value-color-blue {
-        background-color: rgba(211, 229, 239, 1);
-      }
-      .select-value-color-pageGlass {
-        background-color: undefined;
-      }
-      .select-value-color-washGlass {
-        background-color: undefined;
-      }
-
-      .checkbox {
-        display: inline-flex;
-        vertical-align: text-bottom;
-        width: 16;
-        height: 16;
-        background-size: 16px;
-        margin-left: 2px;
-        margin-right: 5px;
-      }
-
-      .checkbox-on {
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
-      }
-
-      .checkbox-off {
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
-      }
-    </style>
-  </head>
-  <body>
-    <article id="fac03cb8-8c35-4609-ae0e-e66e7f832826" class="page sans">
-      <header>
-        <h1 class="page-title">RedwoodJS Admin</h1>
-        <p class="page-description"></p>
-      </header>
-      <div class="page-body">
-        <p id="9fe2ee8a-f29b-44b1-b091-443dbaf12a7f" class="">
-          <strong
-            >Automatically generated admin panel for your RedwoodJS
-            project</strong
-          >
-        </p>
-        <p id="9a154dbf-90ff-49f5-b030-a0098a7c44e6" class=""></p>
-        <figure id="7945c116-2837-4cfd-80dd-fde27eccdd66" class="image">
-          <a
-            href="images/Untitled.png"
-            ><img
-              style="width: 2316px"
-              src="images/Untitled.png"
-          /></a>
-        </figure>
-        <p id="95297260-c7e8-45b4-a26c-d9f0c92d2e16" class=""></p>
-        <p id="9da2ee33-b189-48b8-9efd-ccfcaf049b98" class="">
-          RedwoodJS Admin, or for short, Radmin, looks at your
-          <code>schema.prisma</code> file and automatically generates an admin
-          panel. The admin panel is a separate RedwoodJS app with auth set up
-          for you.
-        </p>
-        <p id="3e6a6fc2-836d-4585-bd84-8c14c64feef2" class=""></p>
-        <p id="287ad9aa-207f-43f5-85e9-6966473dee47" class="">
-          Writing a custom admin panel for your app often doesn’t make sense.
-          Especially in the beginning or your project. Your database model will
-          change too often, forcing you to rewrite your admin panel. So what you
-          will probably do instead is just connect straight to your database
-          with something like TablePlus or Beekeeper Studio so that you can move
-          fast and keep iterating on your database models.
-        </p>
-        <p id="78e5e80b-d245-4766-8cf0-4ac5e042832c" class="">
-          With Radmin you can have the best of both worlds! You get the nicer
-          interface and ease of use a dedicated admin panel gives you plus you
-          get the freedom of iterating on your database models that just using
-          your db admin tool gives you!
-        </p>
-        <p id="9ccdc92a-dd42-44e4-a48b-886c960bacef" class=""></p>
-        <h1 id="e45d0888-02a4-421a-8995-cbeb433339f1" class="">Features</h1>
-        <h2 id="ee2680d3-223c-497e-a007-7bae40942893" class="">
-          Automatically generated
-        </h2>
-        <p id="d9795b41-f6a5-491f-a7f7-4275aa65e03a" class="">
-          Radmin will parse your <code>schema.prisma</code> file and by looking
-          at what models and fields you have it will generate a stand-alone
-          RedwoodJS admin panel app. Radmin tries to be smart about what it
-          generates, but if you need to further customize it there’s support for
-          special <code>/// @radmin</code> tripple-slash comments you can add to
-          your schema to control Radmin’s behavior. Some examples include
-          <code>@radmin-skip</code> to not include an entire model or a single
-          field in the generated admin panel, <code>@radmin-no-delete</code> if
-          you want to disable deleting records on a specific model, etc. It’s
-          all made so that you can generate and re-generate as many times as you
-          need without having to spend any time rebuilding a custom admin panel.
-        </p>
-        <p id="8f4124c1-185f-422e-9da1-af5ec7036b50" class=""></p>
-        <h2 id="ec44d98e-244a-4931-a0aa-b152da41355a" class="">Navigation</h2>
-        <div id="e8dfcdd4-8ed3-402c-837b-d0a78ce65705" class="column-list">
-          <div
-            id="c29dc330-5fdd-4b94-a872-d41ce9b8b8f6"
-            style="width: 50%"
-            class="column"
-          >
-            <figure id="b5beb2fe-9b6a-4bac-80d2-674854419cf1" class="image">
-              <a
-                href="images/Untitled%201.png"
-                ><img
-                  style="width: 470px"
-                  src="images/Untitled%201.png"
-              /></a>
-            </figure>
-          </div>
-          <div
-            id="39127e83-a8bb-471b-a986-136d2ac7f423"
-            style="width: 106.25%"
-            class="column"
-          >
-            <p id="48516973-311b-4cbf-aeb8-f3edf43a5f69" class="">
-              Unlike just using Redwood’s scaffold generator, using Radmin you
-              will automatically get a navigation menu to let you navigate
-              between your different models.
-            </p>
-            <p id="3125c4f3-c3d2-4d79-bdbc-54fb3544997e" class="">
-              To the best of its ability it will even add a relevant icon to the
-              navigation links. But if it can’t find a good icon, or you think
-              it picked the wrong one, you can always manually tell Radmin what
-              icon to use for a specific model.
-            </p>
-            <p id="9be56d01-b21a-4ef7-9d8b-773a0fcaa506" class=""></p>
-          </div>
-        </div>
-        <p id="51ec19d5-e272-4a12-b383-684ff7904113" class=""></p>
-        <h2 id="6b94e49b-c5b1-4d74-9735-49d08763a5b3" class="">Search</h2>
-        <figure id="de19f3bd-9447-4115-90ea-21c66f418cff" class="image">
-          <a
-            href="images/Untitled%202.png"
-            ><img
-              style="width: 1634px"
-              src="images/Untitled%202.png"
-          /></a>
-        </figure>
-        <p id="c6d8656e-a996-4980-a1a9-4971d894111b" class=""></p>
-        <p id="9eb09cf4-2f9b-425c-8534-7d0ecfd7dc51" class="">
-          For every model Radmin generates a search input. It’s smart about what
-          field it lets you search (sku in the example above), and it uses
-          fuzzy-search to make it easier to find the record you’re looking for.
-          And as always, you can always override Radmin’s default behavior. If
-          you want to search another field, like maybe Name in the above example
-          image, all you need to do is add <code>/// @radmin-search</code> to
-          the field you want it to use instead.
-        </p>
-        <p id="ec8e9f35-f882-4218-868d-ca3a1c04fc57" class=""></p>
-        <h2 id="e363fbe2-7264-4e37-8b1f-4930499c6865" class="">Pagination</h2>
-        <p id="eade132e-6120-4a42-b41b-7d79bf241c4c" class=""></p>
-        <figure id="096068ec-b6cb-4171-9b67-c91f8cdf11c9" class="image">
-          <a
-            href="images/Untitled%203.png"
-            ><img
-              style="width: 1634px"
-              src="images/Untitled%203.png"
-          /></a>
-        </figure>
-        <p id="3647e578-1170-4c5f-911f-882cdbbceefd" class=""></p>
-        <p id="ec3c575b-dfd6-4eae-9d50-2ddbd28ed53e" class="">
-          In most real-world scenarios you probably have more database records
-          than what you can comfortably fit on a single page. That’s why Radmin
-          generates pagination for all models that need it.
-        </p>
-        <p id="adbbf11e-b0b5-4eab-89b1-a3903f49e228" class=""></p>
-        <h2 id="d6df53f1-5749-43dd-b221-58d9c75c7b88" class="">
-          WYSIWYG editor
-        </h2>
-        <figure id="7a8658d8-4f7c-43d2-9d72-e3b8d7f8649f" class="image">
-          <a
-            href="images/Untitled%204.png"
-            ><img
-              style="width: 2050px"
-              src="images/Untitled%204.png"
-          /></a>
-        </figure>
-        <p id="5669a0db-013b-4867-b92e-2a02090cf353" class="">
-          For string input fields that need it, Radmin will include a WYSIWYG
-          editor. And if it’s not needed, it will just default to a simple text
-          input field, like the regular Redwood scaffolds do for all fields
-        </p>
-        <figure id="04c17477-92e3-4d48-afad-82ced2d6521f" class="image">
-          <a
-            href="images/Untitled%205.png"
-            ><img
-              style="width: 2048px"
-              src="images/Untitled%205.png"
-          /></a>
-        </figure>
-        <p id="8effac73-30af-4708-98aa-52f182c5dafb" class=""></p>
-        <h2 id="4d280833-5c8a-42fe-8850-71f874f87ee4" class="">
-          Admin panel user management
-        </h2>
-        <figure id="c576e892-8b5f-4077-b75a-f053b4887416" class="image">
-          <a
-            href="images/Untitled%206.png"
-            ><img
-              style="width: 2058px"
-              src="images/Untitled%206.png"
-          /></a>
-        </figure>
-        <p id="27417269-f19f-484d-be1e-2da2cccb69bc" class="">
-          Radmin includes user management to let you control who can access the
-          admin panel. This is totally separated from whatever user management
-          you might have for your main Redwood app.
-        </p>
-        <p id="b24e2747-b81b-43bd-8b2b-20cd7bed0f5b" class=""></p>
-        <h2 id="87237839-b91f-43bb-a334-5e3486b8ba92" class="">
-          Relations support
-        </h2>
-        <div id="6ee5d59b-57ff-4635-b538-0d578990eedf" class="column-list">
-          <div
-            id="fe741380-652a-4c63-8ffc-d597451c310a"
-            style="width: 100%"
-            class="column"
-          >
-            <figure id="a845add3-779f-4703-8c1f-3fb8c6562620" class="image">
-              <a
-                href="images/Untitled%207.png"
-                ><img
-                  style="width: 1026px"
-                  src="images/Untitled%207.png"
-              /></a>
-            </figure>
-          </div>
-          <div
-            id="fbcd0452-0fb2-4beb-a4a5-964bfebab036"
-            style="width: 100%"
-            class="column"
-          >
-            <p id="f190c5ab-a2c0-4858-92e0-6d26627f65c1" class="">
-              Radmin has full support for relations. The screen shot to the left
-              shows a simple one-to-one relation where you can easily click to
-              navigate to the related field.
-            </p>
-            <p id="686da00b-c9f7-40ec-a4cc-ff117bedb942" class="">
-              Relations most often link to a uuid field or even a simple int
-              field. To make it easier to know what record it’s really related
-              to Radmin will include the name in that record when showing the
-              relation, not only the id.
-            </p>
-          </div>
-        </div>
-        <p id="61a669ef-4a52-493f-962f-a93f17220282" class="">
-          As mentioned, there’s also support for one-to-many and many-to-many
-          relations. When editing a record with a relation your get a drop-down
-          list of possible values.
-        </p>
-        <div id="2bc381c6-7348-417c-87fd-763b2fb43aaa" class="column-list">
-          <div
-            id="613bd632-6808-4c51-97ef-69a2b09952dc"
-            style="width: 75%"
-            class="column"
-          >
-            <figure id="855f8069-76bd-4cdc-be70-ed3411fe2f06" class="image">
-              <a
-                href="images/Untitled%208.png"
-                ><img
-                  style="width: 432px"
-                  src="images/Untitled%208.png"
-              /></a>
-            </figure>
-          </div>
-          <div
-            id="cf408650-2bea-4beb-8c5a-57f0ff3f5ae4"
-            style="width: 112.5%"
-            class="column"
-          >
-            <figure id="4bfa57de-f317-4e76-a511-6bd544a5200b" class="image">
-              <a
-                href="images/Untitled%209.png"
-                ><img
-                  style="width: 1614px"
-                  src="images/Untitled%209.png"
-              /></a>
-            </figure>
-          </div>
-        </div>
-        <p id="5fac2843-116e-4c10-9fc4-a155bb34f73f" class=""></p>
-        <h2 id="471f8b6b-79d3-416e-a679-8af2a103fcc0" class="">
-          Custom components
-        </h2>
-        <p id="be7a3658-39f2-499d-8f5f-02b60beac3c7" class="">
-          If there is something that isn’t displayed right by what Radmin gives
-          you by default, and the tripple-slash <code>@radmin</code> comments
-          aren’t enough, you can provide custom components to use when
-          displaying data.
-        </p>
-        <div id="dc23e570-8f03-426a-9e56-88eb5f091c59" class="column-list">
-          <div
-            id="e5d1cb97-d179-4fcb-877a-651c4b368c6b"
-            style="width: 100%"
-            class="column"
-          >
-            <figure id="18b58484-51eb-4969-b3e9-05979ab7cce9" class="image">
-              <a
-                href="images/Untitled%2010.png"
-                ><img
-                  style="width: 934px"
-                  src="images/Untitled%2010.png"
-              /></a>
-            </figure>
-            <p id="d8a12c2c-acd0-4191-b977-6b5c55d39998" class=""></p>
-          </div>
-          <div
-            id="3aa29289-19b4-4ae8-97e7-a5d73363bc6d"
-            style="width: 100%"
-            class="column"
-          >
-            <p id="a64840c3-28da-483e-ae3a-5abd250e0e6c" class="">
-              To the left here you can see I’ve created a custom component that
-              displays a drop-down in the list view of a model. It lets me
-              update a record without first going to the Edit view.
-            </p>
-          </div>
-        </div>
-        <h2 id="7effe70e-059b-4a3a-b8f7-0a9dfa724cc1" class="">
-          Custom actions
-        </h2>
-        <div id="7fda2bbb-a8c2-4d4f-8f8b-21c01d81fd35" class="column-list">
-          <div
-            id="84d3b29a-21bb-4767-9fbf-ec4490efeb11"
-            style="width: 93.75%"
-            class="column"
-          >
-            <p id="d56fc1e6-e1f2-48ff-9095-b58daa62e5ff" class="">
-              All models come with the ability to create new records plus show,
-              edit and delete existing records. But sometimes you’ll want to be
-              able to do other things. That’s why you can create custom actions.
-              In the screen shot to the right you can see I’ve removed the Edit
-              and Delete actions, and instead added a new “Picking List” action.
-              (You can’t see it, but it’ll generate a PDF with all items the
-              customer ordered.)
-            </p>
-          </div>
-          <div
-            id="d51cc15a-01f2-4022-a12f-bcc0b7ee01f7"
-            style="width: 68.75%"
-            class="column"
-          >
-            <figure id="883f3006-f4ad-49c4-b001-6ffccc41b6df" class="image">
-              <a
-                href="images/Untitled%2011.png"
-                ><img
-                  style="width: 472px"
-                  src="images/Untitled%2011.png"
-              /></a>
-            </figure>
-            <p id="590a3ad4-4710-4ca4-8b63-629acc7969d4" class=""></p>
-          </div>
-        </div>
-      </div>
-    </article>
-  </body>
-</html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>RedwoodJS Admin</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-interactiveBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="fac03cb8-8c35-4609-ae0e-e66e7f832826" class="page sans"><header><h1 class="page-title">RedwoodJS Admin</h1><p class="page-description"></p></header><div class="page-body"><p id="9fe2ee8a-f29b-44b1-b091-443dbaf12a7f" class=""><strong>Automatically generated admin panel for your RedwoodJS project</strong></p><p id="9a154dbf-90ff-49f5-b030-a0098a7c44e6" class="">
+</p><figure id="7945c116-2837-4cfd-80dd-fde27eccdd66" class="image"><a href="images/Untitled.png"><img style="width:2316px" src="images/Untitled.png"/></a></figure><p id="95297260-c7e8-45b4-a26c-d9f0c92d2e16" class="">
+</p><p id="9da2ee33-b189-48b8-9efd-ccfcaf049b98" class="">RedwoodJS Admin, or for short, Radmin, looks at your <code>schema.prisma</code> file and automatically generates an admin panel. The admin panel is a separate RedwoodJS app with auth set up for you.</p><p id="3e6a6fc2-836d-4585-bd84-8c14c64feef2" class="">
+</p><p id="287ad9aa-207f-43f5-85e9-6966473dee47" class="">Writing a custom admin panel for your app often doesn’t make sense. Especially in the beginning or your project. Your database model will change too often, forcing you to rewrite your admin panel. So what you will probably do instead is just connect straight to your database with something like TablePlus or Beekeeper Studio so that you can move fast and keep iterating on your database models.</p><p id="78e5e80b-d245-4766-8cf0-4ac5e042832c" class="">With Radmin you can have the best of both worlds! You get the nicer interface and ease of use a dedicated admin panel gives you plus you get the freedom of iterating on your database models that just using your db admin tool gives you!</p><p id="9ccdc92a-dd42-44e4-a48b-886c960bacef" class="">
+</p><h1 id="e45d0888-02a4-421a-8995-cbeb433339f1" class="">Features</h1><h2 id="ee2680d3-223c-497e-a007-7bae40942893" class="">Automatically generated</h2><p id="d9795b41-f6a5-491f-a7f7-4275aa65e03a" class="">Radmin will parse your <code>schema.prisma</code> file and by looking at what models and fields you have it will generate a stand-alone RedwoodJS admin panel app. Radmin tries to be smart about what it generates, but if you need to further customize it there’s support for special <code>/// @radmin</code> tripple-slash comments you can add to your schema to control Radmin’s behavior. Some examples include <code>@radmin-skip</code> to not include an entire model or a single field in the generated admin panel, <code>@radmin-no-delete</code> if you want to disable deleting records on a specific model, etc. It’s all made so that you can generate and re-generate as many times as you need without having to spend any time rebuilding a custom admin panel.</p><p id="8f4124c1-185f-422e-9da1-af5ec7036b50" class="">
+</p><h2 id="ec44d98e-244a-4931-a0aa-b152da41355a" class="">Navigation</h2><div id="e8dfcdd4-8ed3-402c-837b-d0a78ce65705" class="column-list"><div id="c29dc330-5fdd-4b94-a872-d41ce9b8b8f6" style="width:50%" class="column"><figure id="b5beb2fe-9b6a-4bac-80d2-674854419cf1" class="image"><a href="images/Untitled%201.png"><img style="width:470px" src="images/Untitled%201.png"/></a></figure></div><div id="39127e83-a8bb-471b-a986-136d2ac7f423" style="width:106.25%" class="column"><p id="48516973-311b-4cbf-aeb8-f3edf43a5f69" class="">Unlike just using Redwood’s scaffold generator, using Radmin you will automatically get a navigation menu to let you navigate between your different models. </p><p id="3125c4f3-c3d2-4d79-bdbc-54fb3544997e" class="">To the best of its ability it will even add a relevant icon to the navigation links. But if it can’t find a good icon, or you think it picked the wrong one, you can always manually tell Radmin what icon to use for a specific model.</p><p id="9be56d01-b21a-4ef7-9d8b-773a0fcaa506" class="">
+</p></div></div><p id="51ec19d5-e272-4a12-b383-684ff7904113" class="">
+</p><h2 id="6b94e49b-c5b1-4d74-9735-49d08763a5b3" class="">Search</h2><figure id="de19f3bd-9447-4115-90ea-21c66f418cff" class="image"><a href="images/Untitled%202.png"><img style="width:1634px" src="images/Untitled%202.png"/></a></figure><p id="c6d8656e-a996-4980-a1a9-4971d894111b" class="">
+</p><p id="9eb09cf4-2f9b-425c-8534-7d0ecfd7dc51" class="">For every model Radmin generates a search input. It’s smart about what field it lets you search (sku in the example above), and it uses fuzzy-search to make it easier to find the record you’re looking for. And as always, you can always override Radmin’s default behavior. If you want to search another field, like maybe Name in the above example image, all you need to do is add <code>/// @radmin-search</code> to the field you want it to use instead.</p><p id="ec8e9f35-f882-4218-868d-ca3a1c04fc57" class="">
+</p><h2 id="e363fbe2-7264-4e37-8b1f-4930499c6865" class="">Pagination</h2><p id="eade132e-6120-4a42-b41b-7d79bf241c4c" class="">
+</p><figure id="096068ec-b6cb-4171-9b67-c91f8cdf11c9" class="image"><a href="images/Untitled%203.png"><img style="width:1634px" src="images/Untitled%203.png"/></a></figure><p id="3647e578-1170-4c5f-911f-882cdbbceefd" class="">
+</p><p id="ec3c575b-dfd6-4eae-9d50-2ddbd28ed53e" class="">In most real-world scenarios you probably have more database records than what you can comfortably fit on a single page. That’s why Radmin generates pagination for all models that need it.</p><p id="adbbf11e-b0b5-4eab-89b1-a3903f49e228" class="">
+</p><h2 id="d6df53f1-5749-43dd-b221-58d9c75c7b88" class="">WYSIWYG editor</h2><figure id="7a8658d8-4f7c-43d2-9d72-e3b8d7f8649f" class="image"><a href="images/Untitled%204.png"><img style="width:2050px" src="images/Untitled%204.png"/></a></figure><p id="5669a0db-013b-4867-b92e-2a02090cf353" class="">For string input fields that need it, Radmin will include a WYSIWYG editor. And if it’s not needed, it will just default to a simple text input field, like the regular Redwood scaffolds do for all fields</p><figure id="04c17477-92e3-4d48-afad-82ced2d6521f" class="image"><a href="images/Untitled%205.png"><img style="width:2048px" src="images/Untitled%205.png"/></a></figure><p id="8effac73-30af-4708-98aa-52f182c5dafb" class="">
+</p><h2 id="4d280833-5c8a-42fe-8850-71f874f87ee4" class="">Admin panel user management</h2><figure id="c576e892-8b5f-4077-b75a-f053b4887416" class="image"><a href="images/Untitled%206.png"><img style="width:2058px" src="images/Untitled%206.png"/></a></figure><p id="27417269-f19f-484d-be1e-2da2cccb69bc" class="">Radmin includes user management to let you control who can access the admin panel. This is totally separated from whatever user management you might have for your main Redwood app.</p><p id="b24e2747-b81b-43bd-8b2b-20cd7bed0f5b" class="">
+</p><h2 id="87237839-b91f-43bb-a334-5e3486b8ba92" class="">Relations support</h2><div id="6ee5d59b-57ff-4635-b538-0d578990eedf" class="column-list"><div id="fe741380-652a-4c63-8ffc-d597451c310a" style="width:100%" class="column"><figure id="a845add3-779f-4703-8c1f-3fb8c6562620" class="image"><a href="images/Untitled%207.png"><img style="width:1026px" src="images/Untitled%207.png"/></a></figure></div><div id="fbcd0452-0fb2-4beb-a4a5-964bfebab036" style="width:100%" class="column"><p id="f190c5ab-a2c0-4858-92e0-6d26627f65c1" class="">Radmin has full support for relations. The screen shot to the left shows a simple one-to-one relation where you can easily click to navigate to the related field. </p><p id="686da00b-c9f7-40ec-a4cc-ff117bedb942" class="">Relations most often link to a uuid field or even a simple int field. To make it easier to know what record it’s really related to Radmin will include the name in that record when showing the relation, not only the id.</p></div></div><p id="61a669ef-4a52-493f-962f-a93f17220282" class="">As mentioned, there’s also support for one-to-many and many-to-many relations. When editing a record with a relation your get a drop-down list of possible values. </p><div id="2bc381c6-7348-417c-87fd-763b2fb43aaa" class="column-list"><div id="613bd632-6808-4c51-97ef-69a2b09952dc" style="width:75%" class="column"><figure id="855f8069-76bd-4cdc-be70-ed3411fe2f06" class="image"><a href="images/Untitled%208.png"><img style="width:432px" src="images/Untitled%208.png"/></a></figure></div><div id="cf408650-2bea-4beb-8c5a-57f0ff3f5ae4" style="width:112.5%" class="column"><figure id="4bfa57de-f317-4e76-a511-6bd544a5200b" class="image"><a href="images/Untitled%209.png"><img style="width:1614px" src="images/Untitled%209.png"/></a></figure></div></div><p id="5fac2843-116e-4c10-9fc4-a155bb34f73f" class="">
+</p><h2 id="471f8b6b-79d3-416e-a679-8af2a103fcc0" class="">Custom components</h2><p id="be7a3658-39f2-499d-8f5f-02b60beac3c7" class="">If there is something that isn’t displayed right by what Radmin gives you by default, and the tripple-slash <code>@radmin</code> comments aren’t enough, you can provide custom components to use when displaying data.</p><div id="dc23e570-8f03-426a-9e56-88eb5f091c59" class="column-list"><div id="e5d1cb97-d179-4fcb-877a-651c4b368c6b" style="width:100%" class="column"><figure id="18b58484-51eb-4969-b3e9-05979ab7cce9" class="image"><a href="images/Untitled%2010.png"><img style="width:934px" src="images/Untitled%2010.png"/></a></figure><p id="d8a12c2c-acd0-4191-b977-6b5c55d39998" class="">
+</p></div><div id="3aa29289-19b4-4ae8-97e7-a5d73363bc6d" style="width:100%" class="column"><p id="a64840c3-28da-483e-ae3a-5abd250e0e6c" class="">To the left here you can see I’ve created a custom component that displays a drop-down in the list view of a model. It lets me update a record without first going to the Edit view.</p></div></div><h2 id="7effe70e-059b-4a3a-b8f7-0a9dfa724cc1" class="">Custom actions</h2><div id="7fda2bbb-a8c2-4d4f-8f8b-21c01d81fd35" class="column-list"><div id="84d3b29a-21bb-4767-9fbf-ec4490efeb11" style="width:93.75%" class="column"><p id="d56fc1e6-e1f2-48ff-9095-b58daa62e5ff" class="">All models come with the ability to create new records plus show, edit and delete existing records. But sometimes you’ll want to be able to do other things. That’s why you can create custom actions. In the screen shot to the right you can see I’ve removed the Edit and Delete actions, and instead added a new “Picking List” action. (You can’t see it, but it’ll generate a PDF with all items the customer ordered.)</p></div><div id="d51cc15a-01f2-4022-a12f-bcc0b7ee01f7" style="width:68.75%" class="column"><figure id="883f3006-f4ad-49c4-b001-6ffccc41b6df" class="image"><a href="images/Untitled%2011.png"><img style="width:472px" src="images/Untitled%2011.png"/></a></figure><p id="590a3ad4-4710-4ca4-8b63-629acc7969d4" class="">
+</p></div></div></div></article></body></html>

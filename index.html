@@ -1,6 +1,8 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>RedwoodJS Admin</title>
     <style>
       /* cspell:disable-file */
@@ -28,6 +30,14 @@
 
       body {
         line-height: 1.5;
+        padding: 0.4rem;
+      }
+
+      /* Medium devices (landscape tablets, 768px and up) */
+      @media only screen and (min-width: 768px) {
+        body {
+          padding: 1rem;
+        }
       }
 
       a,
@@ -287,7 +297,7 @@
       }
 
       .page-description {
-				font-weight: bold;
+        font-weight: bold;
         font-size: 1.25rem;
         margin-bottom: 2em;
       }

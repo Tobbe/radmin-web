@@ -784,6 +784,50 @@
       .checkbox-off {
         background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
       }
+
+      .signup-form {
+        display: flex;
+        flex-direction: column;
+        font-size: 1.4rem;
+        margin-top: 2rem;
+      }
+
+      /* Medium devices (landscape tablets, 768px and up) */
+      @media only screen and (min-width: 600px) {
+        .signup-form {
+          margin-inline: 4rem;
+        }
+      }
+
+      /* Medium devices (landscape tablets, 768px and up) */
+      @media only screen and (min-width: 768px) {
+        .signup-form {
+          margin-inline: 10rem;
+        }
+      }
+
+      .signup-form div {
+        display: flex;
+      }
+
+      .signup-form label {
+        display: flex;
+        align-self: center;
+      }
+
+      .signup-form input {
+        line-height: 1.6rem;
+        flex-grow: 1;
+        margin-left: 1rem;
+        padding: 0.4rem;
+        font-size: 1.2rem;
+      }
+
+      .signup-form button {
+        margin-top: 1rem;
+        font-size: 1.4rem;
+        padding: 0.4rem;
+      }
     </style>
   </head>
   <body>
@@ -822,10 +866,25 @@
           get the freedom of iterating on your database models that just using
           your db admin tool gives you!
         </p>
-        <h1 id="features" class="">Features</h1>
-        <h2 id="automatically_generated">
-          Automatically generated
-        </h2>
+        <h1 id="newsletter-signup-top">Newsletter Signup</h1>
+        <p>
+          Radmin is still in development. If you want to be notified when it’s
+          ready, please sign up for our newsletter below.
+        </p>
+        <form netlify class="signup-form">
+          <div>
+            <label>Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="cto@umbrella.corp"
+            />
+          </div>
+          <button type="submit">Sign up</button>
+        </form>
+        <h1 id="features">Features</h1>
+        <h2 id="automatically_generated">Automatically generated</h2>
         <p id="d9795b41-f6a5-491f-a7f7-4275aa65e03a" class="">
           Radmin will parse your <code>schema.prisma</code> file and by looking
           at what models and fields you have it will generate a stand-alone
@@ -1059,6 +1118,23 @@
             <p id="590a3ad4-4710-4ca4-8b63-629acc7969d4" class=""></p>
           </div>
         </div>
+        <h1 id="newsletter-signup-bottom">Newsletter Signup</h1>
+        <p>
+          Radmin is still in development. If you want to be notified when it’s
+          ready, please sign up for our newsletter below.
+        </p>
+        <form netlify class="signup-form">
+          <div>
+            <label>Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="cto@umbrella.corp"
+            />
+          </div>
+          <button type="submit">Sign up</button>
+        </form>
       </div>
     </article>
   </body>
